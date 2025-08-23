@@ -69,7 +69,7 @@ export function generateGeneralHTML(data) {
       let gradeDisplay = "";
       if (e.grade) {
         if (e.gradeType === "cgpa") {
-          gradeDisplay = ` | CGPA: ${e.grade} / 10`;
+          gradeDisplay = ` | CGPA: ${e.grade}`;
         } else {
           gradeDisplay = ` | ${e.grade}%`;
         }
@@ -183,7 +183,7 @@ export function generateCompanySpecificHTML(data) {
       let gradeDisplay = "";
       if (e.grade) {
         if (e.gradeType === "cgpa") {
-          gradeDisplay = ` | CGPA: ${e.grade} / 10`;
+          gradeDisplay = ` | CGPA: ${e.grade}`;
         } else {
           gradeDisplay = ` | ${e.grade}%`;
         }
@@ -248,7 +248,7 @@ export function generateSectionHTML(type, index) {
                       <div>
                         <label class="form-label">Grade Type</label>
                         <select id="edu_grade_type_${index}" class="form-input">
-                          <option value="cgpa">CGPA (out of 10)</option>
+                          <option value="cgpa">CGPA</option>
                           <option value="percentage">Percentage (%)</option>
                         </select>
                       </div>

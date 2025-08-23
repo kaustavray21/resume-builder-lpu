@@ -3,6 +3,18 @@ import { addSection, removeSection, updatePreview } from "./ui.js";
 
 let currentFormat = "general";
 
+function cgpaToPercentage(cgpa) {
+  if (cgpa === "" || isNaN(cgpa)) return "";
+  const percentage = parseFloat(cgpa) * 9.5;
+  return percentage > 100 ? 100 : percentage.toFixed(2);
+}
+
+function percentageToCgpa(percentage) {
+  if (percentage === "" || isNaN(percentage)) return "";
+  const cgpa = parseFloat(percentage) / 9.5;
+  return cgpa > 10 ? 10 : cgpa.toFixed(2);
+}
+
 function initializeFormWithDefaultData() {
   document.getElementById("name").value = "Alex Griffin";
   document.getElementById("email").value = "alex.griffin.dev@example.com";
@@ -20,7 +32,7 @@ function initializeFormWithDefaultData() {
   document.getElementById("tools").value = "Docker, Git, Webpack, Jenkins, AWS";
   document.getElementById("softskills").value =
     "Agile Methodologies, REST APIs, CI/CD, System Design";
-  document.getElementById("hobbies").value =
+  document.getElementById("hobbies-input").value =
     "Competitive Programming, 3D Printing, Urban Gardening, Espresso Brewing";
 
   addSection("project", currentFormat);
@@ -137,11 +149,16 @@ function setupEventListeners() {
     if (event.target.id.startsWith("edu_grade_type_")) {
       const index = event.target.id.split("_").pop();
       const gradeInput = document.getElementById(`edu_grade_${index}`);
+      const gradeValue = gradeInput.value;
+
       if (event.target.value === "cgpa") {
         gradeInput.setAttribute("max", "10");
+        gradeInput.value = percentageToCgpa(gradeValue);
       } else {
         gradeInput.removeAttribute("max");
+        gradeInput.value = cgpaToPercentage(gradeValue);
       }
+      updatePreview(currentFormat);
     }
   });
 

@@ -23,7 +23,7 @@ export function getFormValues() {
       softskills: document.getElementById("softskills").value,
     },
     hobbies: document.getElementById("include_hobbies").checked
-      ? document.getElementById("hobbies").value
+      ? document.getElementById("hobbies-input").value
       : "",
     projects: [],
     education: [],
