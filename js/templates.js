@@ -66,11 +66,19 @@ export function generateGeneralHTML(data) {
   if (data.education.length > 0) {
     html += `<section class="mb-8"><h2 class="font-bold text-blue-900 uppercase border-b-2 border-gray-300 pb-2 mb-4">Education</h2><ul class="list-disc pl-5 space-y-3">`;
     data.education.forEach((e) => {
+      let gradeDisplay = "";
+      if (e.grade) {
+        if (e.gradeType === "cgpa") {
+          gradeDisplay = ` | CGPA: ${e.grade} / 10`;
+        } else {
+          gradeDisplay = ` | ${e.grade}%`;
+        }
+      }
       html += `
               <li>
                   <div>
                       <div class="flex justify-between items-center"><h3 class="font-bold text-gray-900">${e.school}</h3><p class="text-gray-600">${e.location}</p></div>
-                      <div class="flex justify-between items-center"><p class="italic text-gray-700">${e.degree}</p><p class="text-gray-600">${e.dates}</p></div>
+                      <div class="flex justify-between items-center"><p class="italic text-gray-700">${e.degree}${gradeDisplay}</p><p class="text-gray-600">${e.dates}</p></div>
                   </div>
               </li>`;
     });
@@ -172,11 +180,19 @@ export function generateCompanySpecificHTML(data) {
             <h2 class="text-xl font-semibold border-b-2 border-gray-300 pb-1 mb-3">Education</h2>
             <ul class="list-disc pl-5 text-sm space-y-3">`;
     data.education.forEach((e) => {
+      let gradeDisplay = "";
+      if (e.grade) {
+        if (e.gradeType === "cgpa") {
+          gradeDisplay = ` | CGPA: ${e.grade} / 10`;
+        } else {
+          gradeDisplay = ` | ${e.grade}%`;
+        }
+      }
       html += `<li>
                 <div class="flex justify-between">
                     <div>
                         <p class="font-bold">${e.school}</p>
-                        <p class="italic text-gray-600">${e.degree}</p>
+                        <p class="italic text-gray-600">${e.degree}${gradeDisplay}</p>
                     </div>
                     <div class="text-right">
                         <p>${e.location}</p>
@@ -221,9 +237,22 @@ export function generateSectionHTML(type, index) {
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div><label class="form-label">School/University</label><input type="text" id="edu_school_${index}" class="form-input"></div>
                       <div><label class="form-label">Location</label><input type="text" id="edu_location_${index}" class="form-input"></div>
-                      <div><label class="form-label">Degree/Course & Grade</label><input type="text" id="edu_degree_${index}" class="form-input"></div>
+                      <div><label class="form-label">Degree/Course</label><input type="text" id="edu_degree_${index}" class="form-input"></div>
                       <div><label class="form-label">Dates</label><input type="text" id="edu_dates_${index}" class="form-input"></div>
                   </div>
+                   <div class="mt-4 grid grid-cols-2 gap-4">
+                      <div>
+                        <label class="form-label">Grade</label>
+                        <input type="number" id="edu_grade_${index}" class="form-input" max="10" step="0.01">
+                      </div>
+                      <div>
+                        <label class="form-label">Grade Type</label>
+                        <select id="edu_grade_type_${index}" class="form-input">
+                          <option value="cgpa">CGPA (out of 10)</option>
+                          <option value="percentage">Percentage (%)</option>
+                        </select>
+                      </div>
+                   </div>
               </fieldset>`;
       break;
     case "achievement":

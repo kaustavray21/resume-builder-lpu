@@ -48,6 +48,8 @@ export function getFormValues() {
         location: document.getElementById(`edu_location_${i}`).value,
         degree: document.getElementById(`edu_degree_${i}`).value,
         dates: document.getElementById(`edu_dates_${i}`).value,
+        grade: document.getElementById(`edu_grade_${i}`).value,
+        gradeType: document.getElementById(`edu_grade_type_${i}`).value,
       });
     }
   }

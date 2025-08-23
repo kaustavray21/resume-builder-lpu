@@ -47,6 +47,8 @@ function initializeFormWithDefaultData() {
   document.getElementById("edu_degree_0").value =
     "Master of Science in Information Systems";
   document.getElementById("edu_dates_0").value = "2023 – 2025";
+  document.getElementById("edu_grade_type_0").value = "cgpa";
+  document.getElementById("edu_grade_0").value = "3.8";
 
   addSection("education", currentFormat);
   document.getElementById("edu_school_1").value =
@@ -55,6 +57,8 @@ function initializeFormWithDefaultData() {
   document.getElementById("edu_degree_1").value =
     "Bachelor of Arts in Computer Science";
   document.getElementById("edu_dates_1").value = "2019 – 2023";
+  document.getElementById("edu_grade_type_1").value = "cgpa";
+  document.getElementById("edu_grade_1").value = "3.9";
 
   addSection("certification", currentFormat);
   document.getElementById("cert_title_0").value =
@@ -126,6 +130,18 @@ function setupEventListeners() {
     if (removeBtn) {
       const elementId = removeBtn.dataset.target;
       removeSection(elementId, currentFormat);
+    }
+  });
+
+  document.addEventListener("change", (event) => {
+    if (event.target.id.startsWith("edu_grade_type_")) {
+      const index = event.target.id.split("_").pop();
+      const gradeInput = document.getElementById(`edu_grade_${index}`);
+      if (event.target.value === "cgpa") {
+        gradeInput.setAttribute("max", "10");
+      } else {
+        gradeInput.removeAttribute("max");
+      }
     }
   });
 
