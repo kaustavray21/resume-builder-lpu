@@ -1,5 +1,10 @@
-import { getFormValues } from "./data.js";
-import { addSection, removeSection, updatePreview } from "./ui.js";
+import { getFormValues, loadDataFromLocalStorage } from "./data.js";
+import {
+  addSection,
+  removeSection,
+  updatePreview,
+  populateFormWithData,
+} from "./ui.js";
 
 let currentFormat = "general";
 
@@ -188,6 +193,11 @@ function setupEventListeners() {
 }
 
 window.onload = () => {
-  initializeFormWithDefaultData();
+  const savedData = loadDataFromLocalStorage();
+  if (savedData) {
+    populateFormWithData(savedData, currentFormat);
+  } else {
+    initializeFormWithDefaultData();
+  }
   setupEventListeners();
 };

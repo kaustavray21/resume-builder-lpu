@@ -6,6 +6,15 @@ export let sectionCounters = {
   skill: 0,
 };
 
+function saveDataToLocalStorage(data) {
+  localStorage.setItem("resumeData", JSON.stringify(data));
+}
+
+export function loadDataFromLocalStorage() {
+  const data = localStorage.getItem("resumeData");
+  return data ? JSON.parse(data) : null;
+}
+
 export function getFormValues() {
   const values = {
     personal: {
@@ -73,5 +82,7 @@ export function getFormValues() {
       });
     }
   }
+
+  saveDataToLocalStorage(values);
   return values;
 }
