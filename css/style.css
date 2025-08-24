@@ -87,8 +87,8 @@ body {
 
 .remove-section-btn {
   position: absolute;
-  top: 0.25rem;
-  right: 0.25rem;
+  top: 0.75rem;
+  right: 0.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -192,6 +192,9 @@ body {
   }
   #form-container,
   .fixed.bottom-8.right-8 {
+    display: none;
+  }
+  .signature-block {
     display: none;
   }
   #resume-container {

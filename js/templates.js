@@ -98,14 +98,13 @@ export function generateGeneralHTML(data) {
     html += `</ul></section>`;
   }
 
-  if (data.hobbies) {
+  if (data.hobbies.length > 0) {
     html += `
           <section>
               <h2 class="font-bold text-blue-900 uppercase border-b-2 border-gray-300 pb-2 mb-4">Hobbies and Interest</h2>
               <ul class="list-disc pl-5 space-y-1 text-gray-800">
                   ${data.hobbies
-                    .split(",")
-                    .map((hobby) => `<li>${hobby.trim()}</li>`)
+                    .map((hobby) => `<li>${hobby.title.trim()}</li>`)
                     .join("")}
               </ul>
           </section>
@@ -228,6 +227,17 @@ export function generateCompanySpecificHTML(data) {
     html += `</ul></section>`;
   }
 
+  if (data.hobbies.length > 0) {
+    html += `<section class="mt-6">
+        <h2 class="text-xl font-semibold border-b-2 border-gray-300 pb-1 mb-3">Hobbies</h2>
+        <ul class="list-disc pl-5 text-sm space-y-1">
+            ${data.hobbies
+              .map((hobby) => `<li>${hobby.title.trim()}</li>`)
+              .join("")}
+        </ul>
+    </section>`;
+  }
+
   html += `</div>`;
   return html;
 }
@@ -317,6 +327,19 @@ export function generateSectionHTML(type, index) {
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div><label class="form-label">Skill Name (e.g., Languages)</label><input type="text" id="skill_name_${index}" class="form-input"></div>
                       <div><label class="form-label">Details (comma-separated)</label><input type="text" id="skill_details_${index}" class="form-input"></div>
+                  </div>
+              </fieldset>`;
+      break;
+    case "hobby":
+      sectionHtml = `
+              <fieldset id="${fieldsetId}" class="form-section relative">
+                  <legend class="form-legend">Hobby ${index + 1}</legend>
+                  <button type="button" class="remove-section-btn" data-target="${fieldsetId}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                  </button>
+                  <div>
+                      <label class="form-label">Hobby</label>
+                      <input type="text" id="hobby_title_${index}" class="form-input">
                   </div>
               </fieldset>`;
       break;

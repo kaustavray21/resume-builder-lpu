@@ -4,15 +4,11 @@ export let sectionCounters = {
   achievement: 0,
   certification: 0,
   skill: 0,
+  hobby: 0,
 };
 
-function saveDataToLocalStorage(data) {
-  localStorage.setItem("resumeData", JSON.stringify(data));
-}
-
 export function loadDataFromLocalStorage() {
-  const data = localStorage.getItem("resumeData");
-  return data ? JSON.parse(data) : null;
+  return null;
 }
 
 export function getFormValues() {
@@ -26,9 +22,7 @@ export function getFormValues() {
       location: document.getElementById("location").value,
     },
     skills: [],
-    hobbies: document.getElementById("include_hobbies").checked
-      ? document.getElementById("hobbies-input").value
-      : "",
+    hobbies: [],
     projects: [],
     education: [],
     achievements: [],
@@ -82,7 +76,12 @@ export function getFormValues() {
       });
     }
   }
-
-  saveDataToLocalStorage(values);
+  for (let i = 0; i < sectionCounters.hobby; i++) {
+    if (document.getElementById(`hobby_title_${i}`)) {
+      values.hobbies.push({
+        title: document.getElementById(`hobby_title_${i}`).value,
+      });
+    }
+  }
   return values;
 }

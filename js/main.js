@@ -54,8 +54,14 @@ function initializeFormWithDefaultData() {
   document.getElementById("skill_details_4").value =
     "Agile Methodologies, REST APIs, CI/CD, System Design";
 
-  document.getElementById("hobbies-input").value =
-    "Competitive Programming, 3D Printing, Urban Gardening, Espresso Brewing";
+  addSection("hobby", currentFormat);
+  document.getElementById("hobby_title_0").value = "Competitive Programming";
+  addSection("hobby", currentFormat);
+  document.getElementById("hobby_title_1").value = "3D Printing";
+  addSection("hobby", currentFormat);
+  document.getElementById("hobby_title_2").value = "Urban Gardening";
+  addSection("hobby", currentFormat);
+  document.getElementById("hobby_title_3").value = "Espresso Brewing";
 
   addSection("project", currentFormat);
   document.getElementById("project_title_0").value =
@@ -108,6 +114,8 @@ function initializeFormWithDefaultData() {
 }
 
 function setupEventListeners() {
+  const locationContainer = document.getElementById("location-container");
+
   document
     .getElementById("resume-form")
     .addEventListener("keyup", () => updatePreview(currentFormat));
@@ -120,6 +128,11 @@ function setupEventListeners() {
     .forEach((radio) => {
       radio.addEventListener("change", (event) => {
         currentFormat = event.target.value;
+        if (currentFormat === "company") {
+          locationContainer.style.display = "block";
+        } else {
+          locationContainer.style.display = "none";
+        }
         updatePreview(currentFormat);
       });
     });
@@ -161,6 +174,9 @@ function setupEventListeners() {
     .addEventListener("click", () =>
       addSection("certification", currentFormat)
     );
+  document
+    .getElementById("add-hobby-btn")
+    .addEventListener("click", () => addSection("hobby", currentFormat));
 
   document.addEventListener("click", (event) => {
     const removeBtn = event.target.closest(".remove-section-btn");
@@ -193,6 +209,14 @@ function setupEventListeners() {
 }
 
 window.onload = () => {
+  // Set initial state of location field
+  const locationContainer = document.getElementById("location-container");
+  if (document.getElementById("toggle-company").checked) {
+    locationContainer.style.display = "block";
+  } else {
+    locationContainer.style.display = "none";
+  }
+
   const savedData = loadDataFromLocalStorage();
   if (savedData) {
     populateFormWithData(savedData, currentFormat);

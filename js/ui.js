@@ -23,7 +23,12 @@ export function updatePreview(format = "general") {
 export function addSection(type, currentFormat, update = true) {
   const index = sectionCounters[type];
   const sectionHtml = generateSectionHTML(type, index);
-  const containerId = `${type}s-list`;
+  let containerId;
+  if (type === "hobby") {
+    containerId = "hobbies-list";
+  } else {
+    containerId = `${type}s-list`;
+  }
   const container = document.getElementById(containerId);
 
   if (container) {
@@ -50,13 +55,16 @@ export function populateFormWithData(data, currentFormat) {
   document.getElementById("linkedin").value = data.personal.linkedin || "";
   document.getElementById("github").value = data.personal.github || "";
   document.getElementById("location").value = data.personal.location || "";
-  document.getElementById("hobbies-input").value = data.hobbies || "";
-  document.getElementById("include_hobbies").checked = !!data.hobbies;
 
   data.skills.forEach((skill, index) => {
     addSection("skill", currentFormat, false);
     document.getElementById(`skill_name_${index}`).value = skill.name;
     document.getElementById(`skill_details_${index}`).value = skill.details;
+  });
+
+  data.hobbies.forEach((hobby, index) => {
+    addSection("hobby", currentFormat, false);
+    document.getElementById(`hobby_title_${index}`).value = hobby.title;
   });
 
   data.projects.forEach((project, index) => {
