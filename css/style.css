@@ -87,8 +87,8 @@ body {
 
 .remove-section-btn {
   position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
+  top: 0.25rem;
+  right: 0.25rem;
   display: flex;
   align-items: center;
   justify-content: center;
