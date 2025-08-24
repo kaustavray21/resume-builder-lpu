@@ -125,7 +125,7 @@ export function generateCompanySpecificHTML(data) {
             <h1 class="text-3xl font-semibold tracking-wider">${data.personal.name}</h1>
             <p class="text-sm text-gray-600 mt-2">${data.personal.location}</p>
             <div class="text-xs text-gray-800 mt-2 flex flex-nowrap justify-center items-center space-x-4">
-                <span class="flex items-center">
+                <span class="flex items-center whitespace-nowrap">
                     <svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path></svg>
                     ${data.personal.mobile}
                 </span>
@@ -173,6 +173,16 @@ export function generateCompanySpecificHTML(data) {
             <ul class="list-disc pl-5 text-sm space-y-1">`;
     data.certifications.forEach((c) => {
       html += `<li><strong>${c.title}</strong> — <span class="text-gray-600">${c.date}</span></li>`;
+    });
+    html += `</ul></section>`;
+  }
+
+  if (data.achievements.length > 0) {
+    html += `<section class="mb-6">
+            <h2 class="text-xl font-semibold border-b-2 border-gray-300 pb-1 mb-3">Achievements</h2>
+            <ul class="list-disc pl-5 text-sm space-y-1">`;
+    data.achievements.forEach((a) => {
+      html += `<li><strong>${a.title}</strong> — <span class="text-gray-600">${a.date}</span></li>`;
     });
     html += `</ul></section>`;
   }
