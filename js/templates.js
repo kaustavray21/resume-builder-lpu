@@ -8,24 +8,37 @@ export function generateGeneralHTML(data) {
               <div class="text-left">
                   <h1 class="font-bold text-blue-900">${data.personal.name}</h1>
                   <div class="mt-2">
-                      <a href="${data.personal.linkedin}" class="text-gray-700 block hover:underline"><strong class="text-blue-900/80">LinkedIn:</strong> ${linkedinUser}</a>
-                      <a href="${data.personal.github}" class="text-gray-700 block hover:underline"><strong class="text-blue-900/80">GitHub:</strong> ${githubUser}</a>
+                      <a href="${
+                        data.personal.linkedin
+                      }" class="text-gray-700 block hover:underline"><strong class="text-blue-900/80">LinkedIn:</strong> ${linkedinUser}</a>
+                      <a href="${
+                        data.personal.github
+                      }" class="text-gray-700 block hover:underline"><strong class="text-blue-900/80">GitHub:</strong> ${githubUser}</a>
                   </div>
               </div>
               <div class="text-right">
-                  <a href="mailto:${data.personal.email}" class="text-gray-700 block hover:underline"><strong class="text-blue-900/80">Email:</strong> ${data.personal.email}</a>
-                  <a href="tel:${data.personal.mobile}" class="text-gray-700 block hover:underline"><strong class="text-blue-900/80">Mobile:</strong> ${data.personal.mobile}</a>
+                  <a href="mailto:${
+                    data.personal.email
+                  }" class="text-gray-700 block hover:underline"><strong class="text-blue-900/80">Email:</strong> ${
+    data.personal.email
+  }</a>
+                  <a href="tel:${
+                    data.personal.mobile
+                  }" class="text-gray-700 block hover:underline"><strong class="text-blue-900/80">Mobile:</strong> ${
+    data.personal.mobile
+  }</a>
               </div>
           </header>
 
           <section class="mb-8">
               <h2 class="font-bold text-blue-900 uppercase border-b-2 border-gray-300 pb-2 mb-4">Skills</h2>
               <div class="space-y-1">
-                  <div class="flex"><strong class="font-semibold w-48 flex-shrink-0 text-blue-900/80">Languages:</strong><span class="text-gray-800">${data.skills.languages}</span></div>
-                  <div class="flex"><strong class="font-semibold w-48 flex-shrink-0 text-blue-900/80">Frameworks:</strong><span class="text-gray-800">${data.skills.frameworks}</span></div>
-                   <div class="flex"><strong class="font-semibold w-48 flex-shrink-0 text-blue-900/80">Databases:</strong><span class="text-gray-800">${data.skills.databases}</span></div>
-                  <div class="flex"><strong class="font-semibold w-48 flex-shrink-0 text-blue-900/80">Tools:</strong><span class="text-gray-800">${data.skills.tools}</span></div>
-                  <div class="flex"><strong class="font-semibold w-48 flex-shrink-0 text-blue-900/80">Other Skills:</strong><span class="text-gray-800">${data.skills.softskills}</span></div>
+                  ${data.skills
+                    .map(
+                      (skill) =>
+                        `<div class="flex"><strong class="font-semibold w-48 flex-shrink-0 text-blue-900/80">${skill.name}:</strong><span class="text-gray-800">${skill.details}</span></div>`
+                    )
+                    .join("")}
               </div>
           </section>
   `;
@@ -167,11 +180,12 @@ export function generateCompanySpecificHTML(data) {
   html += `<section class="mb-6">
         <h2 class="text-xl font-semibold border-b-2 border-gray-300 pb-1 mb-3">Technical Skills</h2>
         <ul class="list-disc pl-5 text-sm space-y-1">
-            <li><strong class="font-semibold">Languages:</strong> ${data.skills.languages}</li>
-            <li><strong class="font-semibold">Libraries/Frameworks:</strong> ${data.skills.frameworks}</li>
-            <li><strong class="font-semibold">Databases:</strong> ${data.skills.databases}</li>
-            <li><strong class="font-semibold">Tools:</strong> ${data.skills.tools}</li>
-            <li><strong class="font-semibold">Skills:</strong> ${data.skills.softskills}</li>
+            ${data.skills
+              .map(
+                (skill) =>
+                  `<li><strong class="font-semibold">${skill.name}:</strong> ${skill.details}</li>`
+              )
+              .join("")}
         </ul>
     </section>`;
 
@@ -280,6 +294,19 @@ export function generateSectionHTML(type, index) {
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div><label class="form-label">Title</label><input type="text" id="cert_title_${index}" class="form-input"></div>
                       <div><label class="form-label">Date</label><input type="text" id="cert_date_${index}" class="form-input"></div>
+                  </div>
+              </fieldset>`;
+      break;
+    case "skill":
+      sectionHtml = `
+              <fieldset id="${fieldsetId}" class="form-section relative">
+                  <legend class="form-legend">Skill ${index + 1}</legend>
+                  <button type="button" class="remove-section-btn" data-target="${fieldsetId}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                  </button>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div><label class="form-label">Skill Name (e.g., Languages)</label><input type="text" id="skill_name_${index}" class="form-input"></div>
+                      <div><label class="form-label">Details (comma-separated)</label><input type="text" id="skill_details_${index}" class="form-input"></div>
                   </div>
               </fieldset>`;
       break;

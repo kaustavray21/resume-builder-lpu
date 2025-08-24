@@ -3,6 +3,7 @@ export let sectionCounters = {
   education: 0,
   achievement: 0,
   certification: 0,
+  skill: 0,
 };
 
 export function getFormValues() {
@@ -15,13 +16,7 @@ export function getFormValues() {
       github: document.getElementById("github").value,
       location: document.getElementById("location").value,
     },
-    skills: {
-      languages: document.getElementById("languages").value,
-      frameworks: document.getElementById("frameworks").value,
-      tools: document.getElementById("tools").value,
-      databases: document.getElementById("databases").value,
-      softskills: document.getElementById("softskills").value,
-    },
+    skills: [],
     hobbies: document.getElementById("include_hobbies").checked
       ? document.getElementById("hobbies-input").value
       : "",
@@ -30,6 +25,15 @@ export function getFormValues() {
     achievements: [],
     certifications: [],
   };
+
+  for (let i = 0; i < sectionCounters.skill; i++) {
+    if (document.getElementById(`skill_name_${i}`)) {
+      values.skills.push({
+        name: document.getElementById(`skill_name_${i}`).value,
+        details: document.getElementById(`skill_details_${i}`).value,
+      });
+    }
+  }
 
   for (let i = 0; i < sectionCounters.project; i++) {
     if (document.getElementById(`project_title_${i}`)) {

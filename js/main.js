@@ -24,14 +24,31 @@ function initializeFormWithDefaultData() {
   document.getElementById("github").value = "https://github.com/alexgriffindev";
   document.getElementById("location").value = "San Francisco, CA";
 
-  document.getElementById("languages").value =
+  addSection("skill", currentFormat);
+  document.getElementById("skill_name_0").value = "Languages";
+  document.getElementById("skill_details_0").value =
     "JavaScript, TypeScript, Python, HTML5, CSS3";
-  document.getElementById("frameworks").value =
+
+  addSection("skill", currentFormat);
+  document.getElementById("skill_name_1").value = "Frameworks/Libraries";
+  document.getElementById("skill_details_1").value =
     "React, Next.js, Node.js, Express, Tailwind CSS";
-  document.getElementById("databases").value = "PostgreSQL, MongoDB, Redis";
-  document.getElementById("tools").value = "Docker, Git, Webpack, Jenkins, AWS";
-  document.getElementById("softskills").value =
+
+  addSection("skill", currentFormat);
+  document.getElementById("skill_name_2").value = "Databases";
+  document.getElementById("skill_details_2").value =
+    "PostgreSQL, MongoDB, Redis";
+
+  addSection("skill", currentFormat);
+  document.getElementById("skill_name_3").value = "Tools";
+  document.getElementById("skill_details_3").value =
+    "Docker, Git, Webpack, Jenkins, AWS";
+
+  addSection("skill", currentFormat);
+  document.getElementById("skill_name_4").value = "Other Skills";
+  document.getElementById("skill_details_4").value =
     "Agile Methodologies, REST APIs, CI/CD, System Design";
+
   document.getElementById("hobbies-input").value =
     "Competitive Programming, 3D Printing, Urban Gardening, Espresso Brewing";
 
@@ -122,6 +139,9 @@ function setupEventListeners() {
     });
   });
 
+  document
+    .getElementById("add-skill-btn")
+    .addEventListener("click", () => addSection("skill", currentFormat));
   document
     .getElementById("add-project-btn")
     .addEventListener("click", () => addSection("project", currentFormat));
