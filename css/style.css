@@ -46,6 +46,9 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .form-section {
@@ -272,6 +275,33 @@ body {
 
 .form-content.active {
   display: block;
+}
+
+/* Sidebar + Content Wrapper */
+.sidebar-content-wrapper {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  /* Important for flex child scrolling */
+}
+
+/* Scrollable main content */
+.main-form-content {
+  flex: 1;
+  padding-left: 1.5rem;
+  overflow-y: auto;
+  max-height: calc(100vh - 160px);
+  /* Account for header height + padding */
+}
+
+/* Hide scrollbar for main form content */
+.main-form-content::-webkit-scrollbar {
+  display: none;
+}
+
+.main-form-content {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 @media print {

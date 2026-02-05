@@ -157,7 +157,12 @@ export function setupResponsivePreview() {
   const fitPreview = () => {
     const previewBaseWidth = 816; // 8.5in at 96dpi
 
-    // Reset to measure
+    // Reset container styles FIRST to get accurate measurements
+    container.style.width = "";
+    container.style.height = "";
+    container.style.overflow = "auto";
+
+    // Reset preview styles
     preview.style.transform = "none";
     preview.style.width = "";
     preview.style.minWidth = `${previewBaseWidth}px`;
