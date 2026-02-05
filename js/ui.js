@@ -1,11 +1,47 @@
-import { getFormValues, sectionCounters } from "./data.js";
+import { getFormValues, sectionCounters, saveDataToLocalStorage } from "./data.js";
 import {
   generateGeneralHTML,
   generateCompanySpecificHTML,
   generateSectionHTML,
 } from "./templates.js";
+import { validateEmail, validatePhone, validateUrl, debounce } from "./utils.js";
 
 const preview = document.getElementById("resume-preview");
+
+// ============================================
+// TOAST NOTIFICATIONS
+// ============================================
+
+// Create toast container on load
+const toastContainer = document.createElement('div');
+toastContainer.className = 'toast-container';
+document.body.appendChild(toastContainer);
+
+const TOAST_ICONS = {
+  success: `<svg class="toast-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`,
+  error: `<svg class="toast-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>`,
+  info: `<svg class="toast-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`,
+};
+
+/**
+ * Shows a toast notification
+ * @param {string} message - The message to display
+ * @param {'success'|'error'|'info'} type - Toast type
+ * @param {number} duration - Duration in ms (default: 3000)
+ */
+export function showToast(message, type = 'success', duration = 3000) {
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  toast.innerHTML = `${TOAST_ICONS[type] || TOAST_ICONS.info}<span>${message}</span>`;
+
+  toastContainer.appendChild(toast);
+
+  // Auto-remove after duration
+  setTimeout(() => {
+    toast.classList.add('toast-hide');
+    setTimeout(() => toast.remove(), 200);
+  }, duration);
+}
 
 export function updatePreview(format = "general") {
   const data = getFormValues();
@@ -67,6 +103,14 @@ export function populateFormWithData(data, currentFormat) {
     document.getElementById(`hobby_title_${index}`).value = hobby.title;
   });
 
+  data.experiences?.forEach((exp, index) => {
+    addSection("experience", currentFormat, false);
+    document.getElementById(`exp_title_${index}`).value = exp.title;
+    document.getElementById(`exp_start_date_${index}`).value = exp.startDate;
+    document.getElementById(`exp_end_date_${index}`).value = exp.endDate;
+    document.getElementById(`exp_desc_${index}`).value = exp.desc?.join("\n") || "";
+  });
+
   data.projects.forEach((project, index) => {
     addSection("project", currentFormat, false);
     document.getElementById(`project_title_${index}`).value = project.title;
@@ -99,4 +143,183 @@ export function populateFormWithData(data, currentFormat) {
   });
 
   updatePreview(currentFormat);
+}
+
+/**
+ * Sets up responsive scaling for the preview
+ */
+export function setupResponsivePreview() {
+  const container = document.getElementById("resume-container");
+  const preview = document.getElementById("resume-preview");
+
+  if (!container || !preview) return;
+
+  const fitPreview = () => {
+    const previewBaseWidth = 816; // 8.5in at 96dpi
+
+    // Reset to measure
+    preview.style.transform = "none";
+    preview.style.width = "";
+    preview.style.minWidth = `${previewBaseWidth}px`;
+
+    const containerWidth = container.clientWidth;
+    const availableWidth = containerWidth - 32;
+
+    if (availableWidth < previewBaseWidth) {
+      const scale = availableWidth / previewBaseWidth;
+      preview.style.transform = `scale(${scale})`;
+      preview.style.transformOrigin = "top center";
+
+      // Adjust container styles
+      container.style.height = `${preview.scrollHeight * scale + 40}px`;
+      container.style.width = `${availableWidth}px`;
+      container.style.overflow = "hidden";
+    } else {
+      preview.style.transform = "none";
+      preview.style.minWidth = "";
+      container.style.height = "";
+      container.style.width = "";
+      container.style.overflow = "auto";
+    }
+  };
+
+  const debouncedFit = debounce(fitPreview, 100);
+  window.addEventListener("resize", debouncedFit);
+
+  const observer = new MutationObserver(debouncedFit);
+  observer.observe(preview, { childList: true, subtree: true, characterData: true });
+
+  setTimeout(fitPreview, 100);
+}
+
+/**
+ * Sets up real-time validation listeners
+ */
+export function setupValidationListeners() {
+  const fields = [
+    { id: 'email', validator: validateEmail, msg: 'Invalid email address' },
+    { id: 'mobile', validator: validatePhone, msg: 'Invalid phone number' },
+    { id: 'linkedin', validator: validateUrl, msg: 'Invalid URL (must start with http/https)' },
+    { id: 'github', validator: validateUrl, msg: 'Invalid URL (must start with http/https)' }
+  ];
+
+  fields.forEach(({ id, validator, msg }) => {
+    const input = document.getElementById(id);
+    if (!input) { return; }
+
+    // Create error message element
+    const errorMsg = document.createElement('div');
+    errorMsg.className = 'error-message';
+    errorMsg.style.display = 'none'; // Initially hidden
+    errorMsg.innerHTML = `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> ${msg}`;
+    input.parentNode.appendChild(errorMsg);
+
+    input.addEventListener('input', () => {
+      const value = input.value.trim();
+      if (!value) {
+        input.classList.remove('valid', 'invalid');
+        errorMsg.style.display = 'none';
+        return;
+      }
+
+      const isValid = validator(value);
+      if (isValid) {
+        input.classList.add('valid');
+        input.classList.remove('invalid');
+        errorMsg.style.display = 'none';
+      } else {
+        input.classList.add('invalid');
+        input.classList.remove('valid');
+        errorMsg.style.display = 'flex';
+      }
+    });
+  });
+}
+
+/**
+ * Helper to determine insert position
+ */
+function getDragAfterElement(container, y) {
+  const draggableElements = [...container.querySelectorAll('.draggable-section:not(.dragging)')];
+
+  return draggableElements.reduce((closest, child) => {
+    const box = child.getBoundingClientRect();
+    const offset = y - box.top - box.height / 2;
+    if (offset < 0 && offset > closest.offset) {
+      return { offset: offset, element: child };
+    } else {
+      return closest;
+    }
+  }, { offset: Number.NEGATIVE_INFINITY }).element;
+}
+
+/**
+ * Updates section numbering after reorder
+ */
+function updateSectionNumbers(container) {
+  const sections = container.querySelectorAll('.draggable-section');
+  sections.forEach((sec, index) => {
+    const legend = sec.querySelector('legend');
+    if (legend) {
+      const text = legend.textContent;
+      // Match "Word Number" pattern
+      const match = text.match(/^([a-zA-Z\s]+)\s\d+$/);
+      if (match) {
+        legend.textContent = `${match[1]} ${index + 1}`;
+      }
+    }
+  });
+}
+
+/**
+ * Sets up Drag and Drop functionality
+ */
+export function setupDragAndDrop() {
+  const formContainer = document.getElementById('form-container');
+  if (!formContainer) return;
+
+  formContainer.addEventListener('dragstart', (e) => {
+    const fieldset = e.target.closest('.draggable-section');
+    if (!fieldset) return;
+
+    // Allow dragging by clicking anywhere on the section body
+    fieldset.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  });
+
+  formContainer.addEventListener('dragend', (e) => {
+    const fieldset = e.target.closest('.draggable-section');
+    if (fieldset) {
+      fieldset.classList.remove('dragging');
+      if (fieldset.parentElement) {
+        updateSectionNumbers(fieldset.parentElement);
+      }
+    }
+
+    // Trigger update and save
+    const formatRadio = document.querySelector('input[name="format"]:checked');
+    if (formatRadio) {
+      updatePreview(formatRadio.value);
+      const data = getFormValues();
+      saveDataToLocalStorage(data);
+    }
+  });
+
+  formContainer.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    const dragging = document.querySelector('.dragging');
+    if (!dragging) return;
+
+    // Ensure we are dragging over the correct list
+    const listContainer = e.target.closest('div[id$="-list"]');
+    if (!listContainer) return;
+    if (listContainer !== dragging.parentElement) return;
+
+    const afterElement = getDragAfterElement(listContainer, e.clientY);
+    if (afterElement == null) {
+      listContainer.appendChild(dragging);
+    } else {
+      listContainer.insertBefore(dragging, afterElement);
+    }
+  });
 }

@@ -1,0 +1,30 @@
+{
+    "name": "resu-mate",
+    "version": "1.0.0",
+    "description": "A modern resume builder with multiple format templates",
+    "author": "Kaustav Kr. Sinha Ray",
+    "license": "MIT",
+    "type": "module",
+    "scripts": {
+        "dev": "npx serve .",
+        "test": "vitest",
+        "lint": "eslint js/",
+        "lint:fix": "eslint js/ --fix",
+        "format": "prettier --write \"**/*.{js,css,html}\"",
+        "format:check": "prettier --check \"**/*.{js,css,html}\""
+    },
+    "devDependencies": {
+        "eslint": "^8.57.0",
+        "prettier": "^3.2.0",
+        "serve": "^14.2.0",
+        "tailwindcss": "^4.1.18",
+        "vitest": "^4.0.18"
+    },
+    "keywords": [
+        "resume",
+        "cv",
+        "builder",
+        "pdf",
+        "generator"
+    ]
+}
