@@ -9,7 +9,7 @@ import {
   setupResponsivePreview,
   setupDragAndDrop,
 } from "./ui.js";
-import { debounce } from "./utils.js";
+import { debounce, convertSvgsToImages } from "./utils.js";
 import { AUTO_SAVE_DELAY } from "./config.js";
 import { DEFAULT_RESUME_DATA } from "./defaultData.js";
 
@@ -147,35 +147,44 @@ function setupEventListeners() {
     }
   });
 
-  document.getElementById("print-btn").addEventListener("click", () => {
+  document.getElementById("print-btn").addEventListener("click", async () => {
     const element = document.getElementById("resume-preview");
     const name = document.getElementById("name").value || "Resume";
 
     showToast('Generating PDF...', 'info', 2000);
 
-    const opt = {
-      margin: 0,
-      filename: `${name.replace(/\s+/g, '_')}_Resume.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: {
-        scale: 2,
-        useCORS: true,
-        letterRendering: true,
-      },
-      jsPDF: {
-        unit: 'in',
-        format: 'letter',
-        orientation: 'portrait'
-      }
-    };
+    try {
+      // Convert SVGs to raster images directly on the live element
+      await convertSvgsToImages(element);
 
-    // eslint-disable-next-line no-undef
-    html2pdf().set(opt).from(element).save().then(() => {
+      const opt = {
+        margin: 0,
+        filename: `${name.replace(/\s+/g, '_')}_Resume.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          letterRendering: true,
+        },
+        jsPDF: {
+          unit: 'in',
+          format: 'letter',
+          orientation: 'portrait'
+        }
+      };
+
+      // eslint-disable-next-line no-undef
+      await html2pdf().set(opt).from(element).save();
       showToast('PDF downloaded successfully!', 'success');
-    }).catch(() => {
+    } catch (err) {
+      console.error('PDF generation failed:', err);
       showToast('Failed to generate PDF', 'error');
-    });
+    } finally {
+      // Restore the preview (re-generates the HTML with original SVGs)
+      updatePreview(currentFormat);
+    }
   });
+
 
   // Clear form button
   document.getElementById("clear-btn").addEventListener("click", () => {

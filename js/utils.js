@@ -228,3 +228,109 @@ export function validateFormData(data) {
         errors
     };
 }
+
+/**
+ * Gets SVG dimensions from attributes or viewBox
+ * @param {SVGElement} svg
+ * @returns {{ width: number, height: number }}
+ */
+function getSvgDimensions(svg) {
+    // Try explicit width/height attributes first
+    let width = parseFloat(svg.getAttribute('width'));
+    let height = parseFloat(svg.getAttribute('height'));
+
+    if (width && height) {
+        return { width, height };
+    }
+
+    // Try viewBox
+    const viewBox = svg.getAttribute('viewBox');
+    if (viewBox) {
+        const parts = viewBox.split(/[\s,]+/);
+        if (parts.length === 4) {
+            width = parseFloat(parts[2]);
+            height = parseFloat(parts[3]);
+            if (width && height) {
+                return { width, height };
+            }
+        }
+    }
+
+    return { width: 24, height: 24 };
+}
+
+/**
+ * Converts all SVG elements within a container to <img> tags.
+ * Works on cloned/off-screen elements (does NOT use getBoundingClientRect).
+ * @param {HTMLElement} element - The container element
+ * @returns {Promise<void>}
+ */
+export async function convertSvgsToImages(element) {
+    const svgs = element.querySelectorAll('svg');
+
+    const conversionPromises = Array.from(svgs).map(svg => {
+        return new Promise((resolve) => {
+            try {
+                const { width, height } = getSvgDimensions(svg);
+
+                // Ensure the SVG has xmlns so it is self-contained
+                if (!svg.getAttribute('xmlns')) {
+                    svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+                }
+
+                const serializer = new XMLSerializer();
+                const svgString = serializer.serializeToString(svg);
+
+                // Use base64 data-URI (avoids Blob/ObjectURL lifecycle issues)
+                const base64 = btoa(unescape(encodeURIComponent(svgString)));
+                const dataUri = `data:image/svg+xml;base64,${base64}`;
+
+                const img = new Image();
+                img.onload = () => {
+                    // Rasterize onto a canvas for maximum compatibility
+                    const canvas = document.createElement('canvas');
+                    const scale = 2; // 2x for crisp rendering
+                    canvas.width = width * scale;
+                    canvas.height = height * scale;
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                    const newImg = document.createElement('img');
+                    newImg.src = canvas.toDataURL('image/png');
+                    newImg.width = width;
+                    newImg.height = height;
+                    newImg.style.display = 'inline-block';
+                    newImg.style.verticalAlign = 'middle';
+
+                    // Preserve classes and inline styles
+                    if (svg.getAttribute('class')) {
+                        newImg.className = svg.getAttribute('class');
+                    }
+                    if (svg.getAttribute('style')) {
+                        newImg.style.cssText += svg.getAttribute('style');
+                    }
+
+                    if (svg.parentNode) {
+                        svg.parentNode.replaceChild(newImg, svg);
+                    }
+                    resolve();
+                };
+
+                img.onerror = () => {
+                    console.warn('Failed to load SVG as image');
+                    resolve();
+                };
+
+                img.src = dataUri;
+            } catch (e) {
+                console.warn('Error converting SVG:', e);
+                resolve();
+            }
+        });
+    });
+
+    await Promise.all(conversionPromises);
+}
+
+
