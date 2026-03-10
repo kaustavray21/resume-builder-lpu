@@ -41,6 +41,40 @@ function initializeFormWithDefaultData() {
   updatePreview(currentFormat);
 }
 
+// Section order definitions for each format
+const SIDEBAR_ORDER = {
+  company: ['personal', 'summary', 'experience', 'projects', 'certifications', 'achievements', 'skills', 'education'],
+  general: ['personal', 'summary', 'skills', 'projects', 'certifications', 'achievements', 'education', 'hobbies'],
+};
+
+function reorderSidebar(format) {
+  const nav = document.querySelector('.sidebar-nav');
+  if (!nav) return;
+
+  const order = SIDEBAR_ORDER[format] || SIDEBAR_ORDER.general;
+  const links = {};
+
+  // Collect all sidebar links by their href target
+  nav.querySelectorAll('.sidebar-link').forEach((link) => {
+    const id = link.getAttribute('href').substring(1);
+    links[id] = link;
+  });
+
+  // Re-append in the correct order
+  order.forEach((id) => {
+    if (links[id]) {
+      nav.appendChild(links[id]);
+    }
+  });
+
+  // Append any remaining links not in the order (safety net)
+  Object.keys(links).forEach((id) => {
+    if (!order.includes(id)) {
+      nav.appendChild(links[id]);
+    }
+  });
+}
+
 function setupEventListeners() {
   const locationContainer = document.getElementById("location-container");
 
@@ -74,6 +108,7 @@ function setupEventListeners() {
           experienceLink.style.display = "none";
           hobbiesLink.style.display = "flex";
         }
+        reorderSidebar(currentFormat);
         updatePreview(currentFormat);
       });
     });
@@ -264,6 +299,8 @@ window.onload = () => {
     experienceLink.style.display = "none";
     hobbiesLink.style.display = "flex";
   }
+
+  reorderSidebar(currentFormat);
 
   const savedData = loadDataFromLocalStorage();
   if (savedData) {

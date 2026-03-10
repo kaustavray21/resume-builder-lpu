@@ -7,6 +7,7 @@ export const DEFAULT_RESUME_DATA = {
         github: "https://github.com/alexgriffindev",
         location: "San Francisco, CA"
     },
+    summary: "Results-driven Software Engineer with 5+ years of experience building scalable web applications using React, Node.js, and cloud technologies. Passionate about clean code, system design, and mentoring junior developers. Proven track record of delivering high-impact features serving 1M+ users.",
     skills: [
         { name: "Languages", details: "JavaScript, TypeScript, Python, HTML5, CSS3" },
         { name: "Frameworks/Libraries", details: "React, Next.js, Node.js, Express, Tailwind CSS" },

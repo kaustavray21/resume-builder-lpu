@@ -74,6 +74,12 @@ export function generateGeneralHTML(data) {
               </div>
           </header>
 
+          ${data.summary && data.summary.trim() ? `
+          <section class="mb-8">
+              <h2 class="font-bold text-blue-900 uppercase border-b-2 border-gray-300 pb-2 mb-4">Professional Summary</h2>
+              <p class="text-gray-700 leading-relaxed">${escapeHtml(data.summary)}</p>
+          </section>` : ''}
+
           <section class="mb-8">
               <h2 class="font-bold text-blue-900 uppercase border-b-2 border-gray-300 pb-2 mb-4">Skills</h2>
               <div class="space-y-1">
@@ -186,6 +192,13 @@ export function generateCompanySpecificHTML(data) {
         </header>
     `;
 
+  if (data.summary && data.summary.trim()) {
+    html += `<section class="mb-6">
+            <h2 class="text-xl font-semibold border-b-2 border-gray-300 pb-1 mb-3">Professional Summary</h2>
+            <p class="text-sm text-gray-700 leading-relaxed">${escapeHtml(data.summary)}</p>
+        </section>`;
+  }
+
   if (data.experiences.length > 0) {
     html += `<section class="mb-6">
             <h2 class="text-xl font-semibold border-b-2 border-gray-300 pb-1 mb-3">Experience</h2>
@@ -243,7 +256,7 @@ export function generateCompanySpecificHTML(data) {
   }
 
   html += `<section class="mb-6">
-        <h2 class="text-xl font-semibold border-b-2 border-gray-300 pb-1 mb-3">Technical Skills</h2>
+        <h2 class="text-xl font-semibold border-b-2 border-gray-300 pb-1 mb-3">Skills</h2>
         <ul class="list-disc pl-5 text-sm space-y-1">
             ${data.skills
       .map(

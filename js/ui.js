@@ -92,6 +92,8 @@ export function populateFormWithData(data, currentFormat) {
   document.getElementById("github").value = data.personal.github || "";
   document.getElementById("location").value = data.personal.location || "";
 
+  document.getElementById("professional-summary").value = data.summary || "";
+
   data.skills.forEach((skill, index) => {
     addSection("skill", currentFormat, false);
     document.getElementById(`skill_name_${index}`).value = skill.name;

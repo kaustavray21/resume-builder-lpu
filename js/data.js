@@ -140,6 +140,8 @@ export function getFormValues() {
         location: getElementValue("location"),
       },
 
+      summary: getElementValue("professional-summary"),
+
       // Extract skills via DOM order
       skills: Array.from(document.querySelectorAll('#skills-list fieldset')).map(el => ({
         name: getValue(el, '[id^="skill_name_"]'),
@@ -196,6 +198,7 @@ export function getFormValues() {
     // Return empty structure on error
     return {
       personal: { name: '', email: '', mobile: '', linkedin: '', github: '', location: '' },
+      summary: '',
       skills: [],
       hobbies: [],
       projects: [],
