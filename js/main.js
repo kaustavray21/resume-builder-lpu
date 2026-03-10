@@ -208,7 +208,7 @@ function setupEventListeners() {
         },
         pagebreak: {
           mode: ['avoid-all', 'css'],
-          avoid: ['section', 'li', 'h2', 'h3']
+          avoid: ['section', 'li', 'h2', 'h3', '.resume-section-education']
         }
       };
 

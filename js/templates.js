@@ -125,7 +125,7 @@ export function generateGeneralHTML(data) {
   }
 
   if (data.education.length > 0) {
-    html += `<section class="mb-8"><h2 class="font-bold text-blue-900 uppercase border-b-2 border-gray-300 pb-2 mb-4">Education</h2><ul class="list-disc pl-5 space-y-3">`;
+    html += `<section class="mb-8 resume-section-education"><h2 class="font-bold text-blue-900 uppercase border-b-2 border-gray-300 pb-2 mb-4">Education</h2><ul class="list-disc pl-5 space-y-3">`;
     data.education.forEach((e) => {
       let gradeDisplay = "";
       if (e.grade) {
@@ -268,7 +268,7 @@ export function generateCompanySpecificHTML(data) {
     </section>`;
 
   if (data.education.length > 0) {
-    html += `<section>
+    html += `<section class="resume-section-education">
             <h2 class="text-xl font-semibold border-b-2 border-gray-300 pb-1 mb-3">Education</h2>
             <ul class="list-disc pl-5 text-sm space-y-3">`;
     data.education.forEach((e) => {

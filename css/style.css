@@ -37,6 +37,12 @@ body {
   break-inside: avoid;
 }
 
+/* Keep the entire education section together on one page */
+.resume-body .resume-section-education {
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+}
+
 .resume-body h2,
 .resume-body h3 {
   font-size: 12pt;
@@ -414,6 +420,11 @@ body {
   }
 
   .resume-body li {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .resume-body .resume-section-education {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }
