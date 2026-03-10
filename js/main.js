@@ -205,6 +205,10 @@ function setupEventListeners() {
           unit: 'in',
           format: 'letter',
           orientation: 'portrait'
+        },
+        pagebreak: {
+          mode: ['avoid-all', 'css'],
+          avoid: ['section', 'li', 'h2', 'h3']
         }
       };
 

@@ -16,6 +16,27 @@ body {
   font-size: 10pt;
 }
 
+/* Prevent page breaks from splitting sections in PDF */
+.resume-body section {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.resume-body section h2 {
+  page-break-after: avoid;
+  break-after: avoid;
+}
+
+.resume-body section h3 {
+  page-break-after: avoid;
+  break-after: avoid;
+}
+
+.resume-body li {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
 .resume-body h2,
 .resume-body h3 {
   font-size: 12pt;
@@ -378,6 +399,23 @@ body {
 
   .format-general .space-y-3>*+* {
     margin-top: 0.5rem !important;
+  }
+
+  /* PDF page-break avoidance */
+  .resume-body section {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .resume-body section h2,
+  .resume-body section h3 {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  .resume-body li {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
 }
 
